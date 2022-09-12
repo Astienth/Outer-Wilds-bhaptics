@@ -89,4 +89,6 @@ namespace OWBhaptics
                 ModHelper.Console.WriteLine("Feedback not registered: " + key);
             }
         }
+        #endregion
+    }
 }
