@@ -13,7 +13,6 @@
     <DebugType>none</DebugType>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Bhaptics.Tac" Version="1.4.16" />
     <PackageReference Include="OWML" Version="2.6.0" />
     <PackageReference Include="OuterWildsGameLibs" Version="1.1.12.201" />
   </ItemGroup>
@@ -27,5 +26,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="OWBhaptics.csproj.user" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Bhaptics.Tact">
+      <HintPath>..\libs\Bhaptics.Tact.dll</HintPath>
+      <CopyLocal>True</CopyLocal>
+    </Reference>
   </ItemGroup>
 </Project>

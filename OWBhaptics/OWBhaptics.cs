@@ -11,6 +11,7 @@ namespace OWBhaptics
             ModHelper.Console.WriteLine($"My mod {nameof(OWBhaptics)} is loaded!", MessageType.Success);
 
             //testing bhaptics
+
         }
     }
 }
