@@ -28,6 +28,9 @@
     <Content Include="OWBhaptics.csproj.user" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\..\Assembly-CSharp.dll</HintPath>
+    </Reference>
     <Reference Include="Bhaptics.Tact">
       <HintPath>..\libs\Bhaptics.Tact.dll</HintPath>
       <CopyLocal>True</CopyLocal>
