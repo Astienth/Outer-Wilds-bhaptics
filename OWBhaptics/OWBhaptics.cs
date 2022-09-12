@@ -11,13 +11,15 @@ namespace OWBhaptics
         private void Start()
         {
             // Starting here, you'll have access to OWML's mod helper.
-            ModHelper.Console.WriteLine($"My mod {nameof(OWBhaptics)} is loaded!", MessageType.Success);
+            ModHelper.Console.WriteLine($"Mod {nameof(OWBhaptics)} is loaded!", MessageType.Success);
 
-            //testing bhaptics
+            //init bhaptics player instance
             try
             {
                 tactsuitVr = new BhapticsTactsuit();
-                tactsuitVr.PlaybackHaptics("HeartBeat");
+                ModHelper.Console.WriteLine(tactsuitVr.ToString());
+                tactsuitVr.PlaybackHaptics("Eating");
+                ModHelper.Console.WriteLine("Eating");
             }
             catch (Exception e) { ModHelper.Console.WriteLine(e.ToString()); }
         }
