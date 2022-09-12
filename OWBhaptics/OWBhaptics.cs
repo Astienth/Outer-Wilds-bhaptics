@@ -3,17 +3,13 @@ using OWML.Common;
 using OWML.ModHelper;
 using UnityEngine;
 using System.Reflection;
+using HarmonyLib;
 
 namespace OWBhaptics
 {
     public class OWBhaptics : ModBehaviour
     {
         public static BhapticsTactsuit tactsuitVr;
-
-        private void Awake()
-        {
-            
-        }
 
         private void Start()
         {
@@ -24,13 +20,26 @@ namespace OWBhaptics
             try
             {
                 tactsuitVr = new BhapticsTactsuit();
+                if (!tactsuitVr.suitDisabled)
+                {
+                    Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
+                }
+                
             }
             catch (Exception e) { ModHelper.Console.WriteLine(e.ToString()); }
         }
+    }
 
-        public void Thrusters(ThrusterModel __instance, ref Vector3 ____translationalInput)
+
+    /**
+     * When using ship thrusters
+     */
+    [HarmonyPatch(typeof(ShipThrusterModel), "FireTranslationalThrusters")]
+    class ShipThrustersHaptics
+    {
+        public static void Postfix(ShipThrusterModel __instance)
         {
-
+        
         }
     }
 }

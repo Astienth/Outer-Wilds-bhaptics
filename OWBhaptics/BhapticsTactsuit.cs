@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Bhaptics.Tact;
-using OWML.ModHelper;
 using UnityEngine;
 
 namespace OWBhaptics
@@ -11,12 +10,12 @@ namespace OWBhaptics
 
     public class BhapticsTactsuit : MonoBehaviour
     {
-        public static bool suitDisabled = true;
-        public static bool systemInitialized = false;
+        public bool suitDisabled = true;
+        public bool systemInitialized = false;
         // dictionary of all feedback patterns found in the bHaptics directory
-        public static Dictionary<string, FileInfo> FeedbackMap = new Dictionary<string, FileInfo>();
+        public Dictionary<string, FileInfo> FeedbackMap = new Dictionary<string, FileInfo>();
 #pragma warning disable CS0618 // remove warning that the C# library is deprecated
-        public static HapticPlayer hapticPlayer;
+        public HapticPlayer hapticPlayer;
 #pragma warning restore CS0618 
 
         public static RotationOption defaultRotationOption = new RotationOption(0.0f, 0.0f);
