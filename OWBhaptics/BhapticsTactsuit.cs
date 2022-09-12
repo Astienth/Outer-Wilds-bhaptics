@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Bhaptics.Tact;
-using UnityEngine;
+using OWML.ModHelper;
 
 namespace OWBhaptics
 {
 
-    public class BhapticsTactsuit : MonoBehaviour
+    public class BhapticsTactsuit : ModBehaviour
     {
         public static bool suitDisabled = true;
         public static bool systemInitialized = false;
@@ -22,7 +22,7 @@ namespace OWBhaptics
 
         #region Initializers
 
-        public void Awake()
+        public void Start()
         {
             try
             {
@@ -33,6 +33,7 @@ namespace OWBhaptics
             }
             catch
             {
+                ModHelper.Console.WriteLine("HAPTIC PLAYER ERROR");
                 return;
             }
             RegisterAllTactFiles();
@@ -64,8 +65,7 @@ namespace OWBhaptics
                     hapticPlayer.RegisterTactFileStr(prefix, tactFileStr);
                 }
                 catch (Exception e) {
-                    //ModHelp.Console.WriteLine(e.ToString()); 
-                    throw new Exception(e.ToString());
+                    ModHelper.Console.WriteLine(e.ToString()); 
                 }
 
                 FeedbackMap.Add(prefix, Files[i]);
@@ -87,8 +87,7 @@ namespace OWBhaptics
             }
             else
             {
-                //ModHelp.Console.WriteLine("Feedback not registered: " + key);
-                throw new Exception("Feedback not registered: " + key);
+                ModHelper.Console.WriteLine("Feedback not registered: " + key);
             }
         }
         #endregion
