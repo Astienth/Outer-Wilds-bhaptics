@@ -31,8 +31,22 @@ namespace OWBhaptics
     }
 
     /**
-        * OnDamage
-        */
+    * Kill Player
+    */
+    [HarmonyPatch(typeof(DeathManager), "KillPlayer")]
+    class OnDeath
+    {
+        public static void Postfix()
+        {
+            if (!OWBhaptics.tactsuitVr.suitDisabled)
+            {
+                OWBhaptics.tactsuitVr.PlaybackHaptics("Death");
+            }
+        }
+    }
+    /**
+    * OnDamage
+    */
     [HarmonyPatch(typeof(PlayerResources), "ApplyInstantDamage")]
     class OnDamage
     {
