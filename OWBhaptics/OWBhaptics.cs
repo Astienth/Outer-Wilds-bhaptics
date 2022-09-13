@@ -30,16 +30,33 @@ namespace OWBhaptics
         }
     }
 
+    /**
+        * OnDamage
+        */
+    [HarmonyPatch(typeof(PlayerResources), "ApplyInstantDamage")]
+    class OnDamage
+    {
+        public static void Postfix(ref bool __result)
+        {
+            if (!OWBhaptics.tactsuitVr.suitDisabled && __result)
+            {
+                OWBhaptics.tactsuitVr.PlaybackHaptics("ImpactShort");
+            }
+        }
+    }
 
     /**
-     * When using ship thrusters
-     */
+        * When using ship thrusters
+        */
     [HarmonyPatch(typeof(ShipThrusterModel), "FireTranslationalThrusters")]
     class ShipThrustersHaptics
     {
         public static void Postfix(ShipThrusterModel __instance)
         {
-        
+            if (!OWBhaptics.tactsuitVr.suitDisabled)
+            {
+                //OWBhaptics.tactsuitVr.PlaybackHaptics("ImpactShort");
+            }
         }
     }
 }
