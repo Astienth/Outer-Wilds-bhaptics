@@ -76,15 +76,56 @@ namespace OWBhaptics
 
         #region PlayingHapticsEffects
 
-        public void PlaybackHaptics(string key, float intensity = 1.0f, float duration = 1.0f)
+        public void PlaybackHaptics(string key, bool forced = true, float[] rotation = null, float intensity = 1.0f, float duration = 1.0f)
         {
             if (suitDisabled) { return; }
             if (FeedbackMap.ContainsKey(key))
             {
                 ScaleOption scaleOption = new ScaleOption(intensity, duration);
-                hapticPlayer.SubmitRegisteredVestRotation(key, key, defaultRotationOption, scaleOption);
+                RotationOption rotationActive = (rotation == null) ? defaultRotationOption : new RotationOption(rotation[0], rotation[1]);
+                if (hapticPlayer.IsPlaying() && !forced)
+                {
+                    return;
+                }
+                else
+                {
+                    hapticPlayer.SubmitRegisteredVestRotation(key, key, rotationActive, scaleOption);
+                }
             }
         }
         #endregion
+
+        public float[] getPatternRotation(Vector3 localAcceleration)
+        {
+            // bhaptics starts in the front, then rotates to the left. 0° is front, 90° is left, 270° is right.
+            // y is "up", z is "forward" in local coordinates
+            Vector3 patternOrigin = new Vector3(0f, 0f, 1f);
+            // get rid of the up/down component to analyze xz-rotation
+            Vector3 flattenedHit = new Vector3(localAcceleration.x, 0f, localAcceleration.z);
+
+            // get angle. .Net < 4.0 does not have a "SignedAngle" function...
+            float earlyhitAngle = Vector3.Angle(flattenedHit, patternOrigin);
+            // check if cross product points up or down, to make signed angle myself
+            Vector3 earlycrossProduct = Vector3.Cross(flattenedHit, patternOrigin);
+            if (earlycrossProduct.y > 0f) { earlyhitAngle *= -1f; }
+            // relative to player direction
+            float myRotation = earlyhitAngle;
+            // switch directions (bhaptics angles are in mathematically negative direction)
+            myRotation *= -1f;
+            // convert signed angle into [0, 360] rotation
+            if (myRotation < 0f) { myRotation = 360f + myRotation; }
+
+            // up/down shift is in y-direction
+            float hitShift = localAcceleration.y;
+            //torso/player range in valheim
+            float upperBound = 1.0f;
+            float lowerBound = 0.0f;
+            if (hitShift > upperBound) { hitShift = 0.5f; }
+            else if (hitShift < lowerBound) { hitShift = -0.5f; }
+            // ...and then spread/shift it to [-0.5, 0.5]
+            else { hitShift = (hitShift - lowerBound) / (upperBound - lowerBound) - 0.5f; }
+
+            return new float[] { myRotation, hitShift };
+        }
     }
 }

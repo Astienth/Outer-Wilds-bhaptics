@@ -10,9 +10,11 @@ namespace OWBhaptics
     public class OWBhaptics : ModBehaviour
     {
         public static BhapticsTactsuit tactsuitVr;
+        public static IModHelper Helper { get; private set; }
 
         private void Start()
         {
+            Helper = this.ModHelper;
             // Starting here, you'll have access to OWML's mod helper.
             ModHelper.Console.WriteLine($"Mod {nameof(OWBhaptics)} is loaded!", MessageType.Success);
 
@@ -44,6 +46,7 @@ namespace OWBhaptics
             }
         }
     }
+
     /**
     * OnDamage
     */
@@ -60,6 +63,36 @@ namespace OWBhaptics
     }
 
     /**
+    * OnSuitUp
+    */
+    [HarmonyPatch(typeof(PlayerResources), "OnSuitUp")]
+    class OnSuitUp
+    {
+        public static void Postfix()
+        {
+            if (!OWBhaptics.tactsuitVr.suitDisabled)
+            {
+                OWBhaptics.tactsuitVr.PlaybackHaptics("SuitUp");
+            }
+        }
+    }
+
+    /**
+    * OnRemoveSuit
+    */
+    [HarmonyPatch(typeof(PlayerResources), "OnRemoveSuit")]
+    class OnRemoveSuit
+    {
+        public static void Postfix()
+        {
+            if (!OWBhaptics.tactsuitVr.suitDisabled)
+            {
+                OWBhaptics.tactsuitVr.PlaybackHaptics("SuitOff");
+            }
+        }
+    }
+
+    /**
         * When using ship thrusters
         */
     [HarmonyPatch(typeof(ShipThrusterModel), "FireTranslationalThrusters")]
@@ -69,7 +102,12 @@ namespace OWBhaptics
         {
             if (!OWBhaptics.tactsuitVr.suitDisabled)
             {
-                //OWBhaptics.tactsuitVr.PlaybackHaptics("ImpactShort");
+                if (__instance.GetLocalAcceleration().sqrMagnitude > 0)
+                {
+                    float[] rotation = OWBhaptics.tactsuitVr.getPatternRotation(__instance.GetLocalAcceleration());
+                    OWBhaptics.Helper.Console.WriteLine(rotation[0]+ " "+ rotation[1]);
+                    OWBhaptics.tactsuitVr.PlaybackHaptics("Thrust", false, rotation);
+                }
             }
         }
     }
