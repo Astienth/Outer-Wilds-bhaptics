@@ -105,8 +105,26 @@ namespace OWBhaptics
                 if (__instance.GetLocalAcceleration().sqrMagnitude > 0)
                 {
                     float[] rotation = OWBhaptics.tactsuitVr.getPatternRotation(__instance.GetLocalAcceleration());
-                    OWBhaptics.Helper.Console.WriteLine(rotation[0]+ " "+ rotation[1]);
                     OWBhaptics.tactsuitVr.PlaybackHaptics("Thrust", false, rotation);
+                }
+            }
+        }
+    }
+
+    /**
+        * When using jey thrusters
+        */
+    [HarmonyPatch(typeof(JetpackThrusterModel), "FireTranslationalThrusters")]
+    class JetThrustersHaptics
+    {
+        public static void Postfix(JetpackThrusterModel __instance)
+        {
+            if (!OWBhaptics.tactsuitVr.suitDisabled)
+            {
+                if (__instance.GetLocalAcceleration().sqrMagnitude > 0)
+                {
+                    float[] rotation = OWBhaptics.tactsuitVr.getPatternRotation(__instance.GetLocalAcceleration());
+                    OWBhaptics.tactsuitVr.PlaybackHaptics("JetPack", false, rotation);
                 }
             }
         }

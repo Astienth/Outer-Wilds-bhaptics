@@ -117,13 +117,10 @@ namespace OWBhaptics
 
             // up/down shift is in y-direction
             float hitShift = localAcceleration.y;
-            //torso/player range in valheim
-            float upperBound = 1.0f;
-            float lowerBound = 0.0f;
-            if (hitShift > upperBound) { hitShift = 0.5f; }
-            else if (hitShift < lowerBound) { hitShift = -0.5f; }
+            if (hitShift > 0) { hitShift = -0.5f; }
+            else if (hitShift < 0) { hitShift = 0.5f; }
             // ...and then spread/shift it to [-0.5, 0.5]
-            else { hitShift = (hitShift - lowerBound) / (upperBound - lowerBound) - 0.5f; }
+            else { hitShift = 0.0f; }
 
             return new float[] { myRotation, hitShift };
         }
