@@ -53,11 +53,12 @@ namespace OWBhaptics
     [HarmonyPatch(typeof(PlayerResources), "ApplyInstantDamage")]
     class OnDamage
     {
-        public static void Postfix(ref bool __result)
+        public static void Postfix(ref bool __result, float damage)
         {
+            OWBhaptics.Helper.Console.WriteLine(damage+" "+ __result);
             if (!OWBhaptics.tactsuitVr.suitDisabled && __result)
             {
-                OWBhaptics.tactsuitVr.PlaybackHaptics("ImpactShort");
+                OWBhaptics.tactsuitVr.PlaybackHaptics("ImpactLonger");
             }
         }
     }
@@ -105,7 +106,7 @@ namespace OWBhaptics
                 if (__instance.GetLocalAcceleration().sqrMagnitude > 0)
                 {
                     float[] rotation = OWBhaptics.tactsuitVr.getPatternRotation(__instance.GetLocalAcceleration());
-                    OWBhaptics.tactsuitVr.PlaybackHaptics("Thrust", false, rotation);
+                    OWBhaptics.tactsuitVr.PlaybackHaptics("Thrust", false, rotation, 0.3f);
                 }
             }
         }
@@ -124,8 +125,69 @@ namespace OWBhaptics
                 if (__instance.GetLocalAcceleration().sqrMagnitude > 0)
                 {
                     float[] rotation = OWBhaptics.tactsuitVr.getPatternRotation(__instance.GetLocalAcceleration());
-                    OWBhaptics.tactsuitVr.PlaybackHaptics("JetPack", false, rotation);
+                    OWBhaptics.tactsuitVr.PlaybackHaptics("JetPack", false, rotation, 0.3f);
                 }
+            }
+        }
+    }
+
+    /**
+    * OnEatMarshmallow
+    */
+    [HarmonyPatch(typeof(PlayerResources), "OnEatMarshmallow")]
+    class OnEatMarshmallowHaptics
+    {
+        public static void Postfix()
+        {
+            if (!OWBhaptics.tactsuitVr.suitDisabled)
+            {
+                OWBhaptics.tactsuitVr.PlaybackHaptics("Eating");
+            }
+        }
+    }
+
+    /**
+    * OnPressInteract
+    */
+    [HarmonyPatch(typeof(ShipCockpitController), "OnPressInteract")]
+    class OnPressInteractHaptics
+    {
+        public static void Postfix()
+        {
+            if (!OWBhaptics.tactsuitVr.suitDisabled)
+            {
+                OWBhaptics.tactsuitVr.PlaybackHaptics("FlightConsoleIn");
+            }
+        }
+    }
+
+    /**
+    * ExitFlightConsole
+    */
+    [HarmonyPatch(typeof(ShipCockpitController), "ExitFlightConsole")]
+    class ExitFlightConsoleHaptics
+    {
+        public static void Postfix()
+        {
+            if (!OWBhaptics.tactsuitVr.suitDisabled)
+            {
+                OWBhaptics.tactsuitVr.PlaybackHaptics("FlightConsoleOut");
+            }
+        }
+    }
+    
+    /**
+    * Checking if under sandfall
+    */
+    [HarmonyPatch(typeof(PlayerCharacterController), "FixedUpdate")]
+    class PlayerCharacterControllerHaptics
+    {
+        public static void Postfix(PlayerCharacterController __instance)
+        {
+            if (!OWBhaptics.tactsuitVr.suitDisabled 
+                && __instance._fluidDetector.InFluidType(FluidVolume.Type.SAND))
+            {
+                OWBhaptics.tactsuitVr.PlaybackHaptics("SandFall", false, null, 0.5f);
             }
         }
     }
