@@ -111,8 +111,8 @@ namespace OWBhaptics
     }
 
     /**
-        * When using ship thrusters
-        */
+    * When using ship thrusters
+    */
     [HarmonyPatch(typeof(ShipThrusterModel), "FireTranslationalThrusters")]
     class ShipThrustersHaptics
     {
@@ -130,8 +130,8 @@ namespace OWBhaptics
     }
 
     /**
-        * When using jet thrusters
-        */
+    * When using jet thrusters
+    */
     [HarmonyPatch(typeof(JetpackThrusterModel), "FireTranslationalThrusters")]
     class JetThrustersHaptics
     {
