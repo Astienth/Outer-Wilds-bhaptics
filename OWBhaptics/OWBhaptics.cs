@@ -55,10 +55,24 @@ namespace OWBhaptics
     {
         public static void Postfix(ref bool __result, float damage)
         {
-            OWBhaptics.Helper.Console.WriteLine(damage+" "+ __result);
             if (!OWBhaptics.tactsuitVr.suitDisabled && __result)
             {
                 OWBhaptics.tactsuitVr.PlaybackHaptics("ImpactLonger");
+            }
+        }
+    }
+
+    /**
+    * OnDamageShipModule
+    */
+    [HarmonyPatch(typeof(ShipModule), "ApplyImpact")]
+    class ShipModuleOnDamage
+    {
+        public static void Postfix(ImpactData impact)
+        {
+            if (!OWBhaptics.tactsuitVr.suitDisabled && impact.speed > 15.0f)
+            {
+                OWBhaptics.tactsuitVr.PlaybackHaptics("ImpactShort");
             }
         }
     }
