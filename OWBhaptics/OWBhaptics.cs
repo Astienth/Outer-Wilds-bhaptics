@@ -72,7 +72,10 @@ namespace OWBhaptics
         {
             if (!OWBhaptics.tactsuitVr.suitDisabled && impact.speed > 15.0f)
             {
-                OWBhaptics.tactsuitVr.PlaybackHaptics("ImpactShort");
+                if (OWBhaptics.FindObjectOfType<ShipCockpitController>().IsPlayerAtFlightConsole())
+                {
+                    OWBhaptics.tactsuitVr.PlaybackHaptics("ImpactShort");
+                }
             }
         }
     }
@@ -127,7 +130,7 @@ namespace OWBhaptics
     }
 
     /**
-        * When using jey thrusters
+        * When using jet thrusters
         */
     [HarmonyPatch(typeof(JetpackThrusterModel), "FireTranslationalThrusters")]
     class JetThrustersHaptics
@@ -202,6 +205,35 @@ namespace OWBhaptics
                 && __instance._fluidDetector.InFluidType(FluidVolume.Type.SAND))
             {
                 OWBhaptics.tactsuitVr.PlaybackHaptics("SandFall", false, null, 0.5f);
+            }
+        }
+    }
+        
+    /**
+    * When entering water
+    */
+    [HarmonyPatch(typeof(PlayerState), "OnCameraEnterWater")]
+    class OnCameraEnterWaterHaptics
+    {
+        public static void Postfix(PlayerCharacterController __instance)
+        {
+            if (!OWBhaptics.tactsuitVr.suitDisabled)
+            {
+                OWBhaptics.tactsuitVr.PlaybackHaptics("WaterIn", false, null, 0.2f);
+            }
+        }
+    }
+    /**
+    * When exitiing water
+    */
+    [HarmonyPatch(typeof(PlayerState), "OnCameraExitWater")]
+    class OnCameraExitWaterHaptics
+    {
+        public static void Postfix(PlayerCharacterController __instance)
+        {
+            if (!OWBhaptics.tactsuitVr.suitDisabled)
+            {
+                OWBhaptics.tactsuitVr.PlaybackHaptics("WaterOut", false, null, 0.2f);
             }
         }
     }
