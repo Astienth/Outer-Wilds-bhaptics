@@ -237,4 +237,35 @@ namespace OWBhaptics
             }
         }
     }
+
+    /**
+    * When entering singularity
+    * Entry and exit seems to trigger quite at the same time, so only on effect 
+    */
+    [HarmonyPatch(typeof(SingularityController), "PlayEntryAudio")]
+    class enteringSingularityHaptics
+    {
+        public static void Postfix(bool isPlayer)
+        {
+            if (!OWBhaptics.tactsuitVr.suitDisabled && isPlayer)
+            {
+                OWBhaptics.tactsuitVr.PlaybackHaptics("Singularity");
+            }
+        }
+    }
+
+    /**
+    * When entering cravite blackhole
+    */
+    [HarmonyPatch(typeof(WhiteHoleVolume), "ReceiveWarpedBody")]
+    class WhiteHoleVolumeHaptics
+    {
+        public static void Postfix(OWRigidbody warpedBody)
+        {
+            if (!OWBhaptics.tactsuitVr.suitDisabled && warpedBody.CompareTag("Player"))
+            {
+                OWBhaptics.tactsuitVr.PlaybackHaptics("Singularity");
+            }
+        }
+    }
 }
