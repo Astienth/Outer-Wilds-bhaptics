@@ -268,4 +268,19 @@ namespace OWBhaptics
             }
         }
     }
+
+    /**
+    * When suit punctured
+    */
+    [HarmonyPatch(typeof(PlayerResources), "Update")]
+    class SuitPuncturedHaptics
+    {
+        public static void Postfix(PlayerResources __instance)
+        {
+            if (!OWBhaptics.tactsuitVr.suitDisabled && __instance.IsSuitPunctured())
+            {
+                OWBhaptics.tactsuitVr.PlaybackHaptics("Punctured", false, null, 0.1f);
+            }
+        }
+    }
 }
