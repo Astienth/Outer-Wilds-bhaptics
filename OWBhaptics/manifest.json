@@ -1,0 +1,9 @@
+{
+    "$schema": "https://raw.githubusercontent.com/amazingalek/owml/master/schemas/manifest_schema.json",
+    "filename": "OWBhaptics.dll",
+    "author": "Astien",
+    "name": "Bhaptics Outer Wilds",
+    "uniqueName": "Astien.OWBhaptics",
+    "version": "0.1.0",
+    "owmlVersion": "2.1.0"
+}
